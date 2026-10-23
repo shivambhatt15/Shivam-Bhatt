@@ -1,0 +1,437 @@
+{% comment %}
+  BUILD YOUR OWN BUNDLE PAGE TEMPLATE
+  File: templates/page.bundle-builder.liquid
+  
+  HOW TO USE:
+  1. Create this file in your theme under: templates/page.bundle-builder.liquid
+  2. Create a new Page in Shopify Admin with template = "page.bundle-builder"
+  3. Edit the product handles in the "Bundle Products" section below
+  4. Customize the discount tiers as needed
+{% endcomment %}
+
+{% assign bundle_collection = collections['vegetables'] %}
+
+<div class="bundle-page" id="bundle-page">
+
+  {%- comment -%} ===== PAGE HEADER ===== {%- endcomment -%}
+  <div class="bundle-header">
+    <h1 class="bundle-title">Build Your Own Bundle</h1>
+    <div class="bundle-discount-pills">
+      <span class="discount-pill">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#2d6a4f" stroke-width="1.5"/><path d="M4.5 7l1.5 1.5L9 5" stroke="#2d6a4f" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Add 3 Items Get 10% OFF
+      </span>
+      <span class="discount-pill">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#2d6a4f" stroke-width="1.5"/><path d="M4.5 7l1.5 1.5L9 5" stroke="#2d6a4f" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Add 4 Items Get 15% OFF
+      </span>
+      <span class="discount-pill">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#2d6a4f" stroke-width="1.5"/><path d="M4.5 7l1.5 1.5L9 5" stroke="#2d6a4f" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Add 5 Items Get 20% OFF
+      </span>
+    </div>
+  </div>
+
+  <div class="bundle-layout">
+
+    {%- comment -%} ===== LEFT PANEL: PRODUCTS ===== {%- endcomment -%}
+    <div class="bundle-products-panel">
+
+      {%- comment -%} --- Category Tabs --- {%- endcomment -%}
+      <div class="bundle-tabs">
+        <button class="tab-btn active" data-tab="vegetables">Vegetables</button>
+        <button class="tab-btn" data-tab="fruits">Fruits</button>
+        <button class="tab-btn" data-tab="bread-cake">Bread &amp; Cake</button>
+      </div>
+
+      {%- comment -%} --- Product Grid --- {%- endcomment -%}
+      <div class="products-grid" id="products-grid">
+
+        {%- comment -%}
+          === TAB: VEGETABLES ===
+          Replace product handles below with your actual products
+        {%- endcomment -%}
+        <div class="tab-content active" data-tab-content="vegetables">
+          <div class="grid">
+
+            {%- assign veg_handles = 'cauliflower-florets,sweet-corn,baby-cabbage,asparagus-spears,fresh-eggplants,sweet-snap-peas,white-cauliflower,red-bell-pepper' | split: ',' -%}
+
+            {%- for handle in veg_handles -%}
+              {%- assign product = all_products[handle] -%}
+              {%- if product.id -%}
+                {%- include 'bundle-product-card', product: product -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+          </div>
+        </div>
+
+        {%- comment -%} === TAB: FRUITS === {%- endcomment -%}
+        <div class="tab-content" data-tab-content="fruits">
+          <div class="grid">
+            {%- assign fruit_handles = 'fresh-apples,organic-bananas,sweet-mangoes,juicy-oranges' | split: ',' -%}
+            {%- for handle in fruit_handles -%}
+              {%- assign product = all_products[handle] -%}
+              {%- if product.id -%}
+                {%- include 'bundle-product-card', product: product -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- comment -%} === TAB: BREAD & CAKE === {%- endcomment -%}
+        <div class="tab-content" data-tab-content="bread-cake">
+          <div class="grid">
+            {%- assign bread_handles = 'sourdough-bread,banana-cake,croissant,muffin-pack' | split: ',' -%}
+            {%- for handle in bread_handles -%}
+              {%- assign product = all_products[handle] -%}
+              {%- if product.id -%}
+                {%- include 'bundle-product-card', product: product -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    {%- comment -%} ===== RIGHT PANEL: YOUR BUNDLE ===== {%- endcomment -%}
+    <div class="bundle-sidebar">
+      <div class="bundle-sidebar-inner" id="bundle-sidebar">
+
+        <div class="sidebar-header">
+          <h2 class="sidebar-title">Your Bundle <span class="bundle-count" id="bundle-count">0</span></h2>
+          <p class="sidebar-subtitle">Add 3 products to get 10% OFF, 4 products for 15% OFF, and 5 products for 20% OFF.</p>
+        </div>
+
+        {%- comment -%} --- Slot Circles --- {%- endcomment -%}
+        <div class="bundle-slots" id="bundle-slots">
+          <div class="slot-row">
+            <div class="slot" id="slot-1" data-slot="1"></div>
+            <div class="slot" id="slot-2" data-slot="2"></div>
+            <div class="slot discount-slot" id="slot-3" data-slot="3">
+              <span class="discount-label">-10%</span>
+            </div>
+          </div>
+          <div class="slot-row">
+            <div class="slot discount-slot" id="slot-4" data-slot="4">
+              <span class="discount-label">-15%</span>
+            </div>
+            <div class="slot discount-slot" id="slot-5" data-slot="5">
+              <span class="discount-label">-20%</span>
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} --- Bundle Items List --- {%- endcomment -%}
+        <div class="bundle-items-list" id="bundle-items-list"></div>
+
+        {%- comment -%} --- Total + CTA --- {%- endcomment -%}
+        <div class="bundle-total">
+          <div class="total-row">
+            <span class="total-label">Total:</span>
+            <div class="total-prices">
+              <span class="total-original" id="total-original" style="display:none"></span>
+              <span class="total-final" id="total-final">$0.00</span>
+            </div>
+          </div>
+          <div class="discount-badge" id="discount-badge" style="display:none"></div>
+        </div>
+
+        <button class="cta-btn" id="cta-btn" onclick="addBundleToCart()">
+          <span id="cta-text">Add More 3 Items</span>
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{%- comment -%} Hidden form for cart submission {%- endcomment -%}
+<form id="bundle-cart-form" action="/cart/add" method="post" style="display:none">
+  <input type="hidden" name="form_type" value="product">
+  <div id="bundle-form-items"></div>
+</form>
+
+
+<style>
+/* ===== RESET & BASE ===== */
+.bundle-page { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+/* ===== HEADER ===== */
+.bundle-title { font-size: 1.75rem; font-weight: 700; color: #1a1a1a; margin: 0 0 1rem; }
+.bundle-discount-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.discount-pill { display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1px solid #d0d0d0; border-radius: 999px; padding: 0.35rem 0.75rem; font-size: 0.78rem; color: #2d6a4f; font-weight: 500; }
+
+/* ===== LAYOUT ===== */
+.bundle-layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
+@media (max-width: 900px) { .bundle-layout { grid-template-columns: 1fr; } }
+
+/* ===== TABS ===== */
+.bundle-tabs { display: flex; gap: 1.5rem; border-bottom: 2px solid #e8e8e8; margin-bottom: 1.25rem; }
+.tab-btn { background: none; border: none; padding: 0.5rem 0; font-size: 0.95rem; font-weight: 600; cursor: pointer; color: #888; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+.tab-btn.active { color: #1a1a1a; border-bottom-color: #1a1a1a; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ===== PRODUCT GRID ===== */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+
+/* ===== PRODUCT CARD ===== */
+.bundle-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 1rem; position: relative; transition: box-shadow 0.2s; }
+.bundle-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.badge { position: absolute; top: 10px; left: 10px; border-radius: 4px; padding: 2px 7px; font-size: 0.7rem; font-weight: 700; z-index: 1; }
+.badge-best { background: #1a1a1a; color: #fff; }
+.badge-new { background: #2d6a4f; color: #fff; }
+.badge-sale { background: #e53935; color: #fff; }
+.card-image { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 8px; margin-bottom: 0.75rem; background: #f7f7f7; }
+.card-name { font-size: 0.82rem; color: #1a1a1a; font-weight: 500; margin: 0 0 0.4rem; line-height: 1.3; min-height: 2.2em; }
+.card-prices { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.card-price { font-size: 0.95rem; font-weight: 700; color: #1a1a1a; }
+.card-price.sale { color: #e53935; }
+.card-price-original { font-size: 0.8rem; color: #999; text-decoration: line-through; }
+.card-actions { display: flex; align-items: center; gap: 0.5rem; }
+.card-select { flex: 1; padding: 0.4rem 0.5rem; border: 1px solid #d0d0d0; border-radius: 6px; font-size: 0.78rem; background: #fff; cursor: pointer; }
+.card-add-btn { background: #1a1a1a; color: #fff; border: none; border-radius: 6px; padding: 0.4rem 0.8rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+.card-add-btn:hover { background: #333; }
+.card-add-btn.added { background: #2d6a4f; }
+
+/* ===== SIDEBAR ===== */
+.bundle-sidebar-inner { background: #fff; border: 1.5px solid #d0d0d0; border-radius: 14px; padding: 1.25rem; position: sticky; top: 1.5rem; }
+.sidebar-title { font-size: 1.1rem; font-weight: 700; margin: 0 0 0.25rem; display: flex; align-items: center; gap: 8px; }
+.bundle-count { background: #1a1a1a; color: #fff; border-radius: 999px; font-size: 0.72rem; font-weight: 700; padding: 1px 7px; }
+.sidebar-subtitle { font-size: 0.78rem; color: #666; margin: 0 0 1rem; line-height: 1.5; }
+
+/* ===== SLOTS ===== */
+.bundle-slots { margin-bottom: 1rem; }
+.slot-row { display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 0.75rem; }
+.slot { width: 72px; height: 72px; border-radius: 50%; border: 2px dashed #d0d0d0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: #999; background: #fff; flex-shrink: 0; overflow: hidden; position: relative; transition: all 0.2s; }
+.slot.filled { border-color: transparent; background: #f0f7f4; }
+.slot.filled img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+.slot .discount-label { font-size: 0.72rem; color: #888; }
+.slot.unlocked { border-color: #2d6a4f; color: #2d6a4f; }
+.slot.unlocked .discount-label { color: #2d6a4f; }
+
+/* ===== BUNDLE ITEMS LIST ===== */
+.bundle-items-list { margin: 0.75rem 0; max-height: 180px; overflow-y: auto; }
+.bundle-item-row { display: flex; align-items: center; gap: 8px; padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0; }
+.bundle-item-row:last-child { border-bottom: none; }
+.bundle-item-img { width: 36px; height: 36px; object-fit: contain; border-radius: 6px; background: #f7f7f7; }
+.bundle-item-name { flex: 1; font-size: 0.75rem; color: #333; line-height: 1.3; }
+.bundle-item-variant { font-size: 0.68rem; color: #999; }
+.bundle-item-price { font-size: 0.78rem; font-weight: 600; color: #1a1a1a; white-space: nowrap; }
+.bundle-item-remove { background: none; border: none; cursor: pointer; color: #ccc; font-size: 1rem; padding: 0 2px; line-height: 1; }
+.bundle-item-remove:hover { color: #e53935; }
+
+/* ===== TOTAL ===== */
+.bundle-total { border-top: 1px solid #e8e8e8; padding-top: 0.75rem; margin-top: 0.5rem; }
+.total-row { display: flex; justify-content: space-between; align-items: center; }
+.total-label { font-size: 1rem; font-weight: 700; }
+.total-prices { display: flex; align-items: center; gap: 8px; }
+.total-original { font-size: 0.85rem; color: #999; text-decoration: line-through; }
+.total-final { font-size: 1.1rem; font-weight: 700; color: #1a1a1a; }
+.discount-badge { margin-top: 0.35rem; font-size: 0.72rem; color: #2d6a4f; font-weight: 600; background: #e8f5e9; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+
+/* ===== CTA BUTTON ===== */
+.cta-btn { width: 100%; margin-top: 0.75rem; background: #555; color: #fff; border: none; border-radius: 8px; padding: 0.8rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.cta-btn:hover { background: #1a1a1a; }
+.cta-btn.ready { background: #2d6a4f; }
+.cta-btn.ready:hover { background: #1b4332; }
+.cta-btn:disabled { background: #999; cursor: not-allowed; }
+</style>
+
+
+<script>
+// ===================================================
+// BUILD YOUR OWN BUNDLE - JAVASCRIPT
+// ===================================================
+
+// --- CONFIG ---
+const BUNDLE_CONFIG = {
+  tiers: [
+    { min: 3, discount: 10, label: '10% OFF' },
+    { min: 4, discount: 15, label: '15% OFF' },
+    { min: 5, discount: 20, label: '20% OFF' },
+  ],
+  maxItems: 5
+};
+
+// --- STATE ---
+let bundleItems = []; // { variantId, price, name, image, variantTitle }
+
+// --- TABS ---
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelector(`[data-tab-content="${tab}"]`).classList.add('active');
+  });
+});
+
+// --- ADD ITEM ---
+function addToBundle(variantId, price, name, image, variantTitle) {
+  if (bundleItems.length >= BUNDLE_CONFIG.maxItems) {
+    alert('Maximum 5 items per bundle!');
+    return;
+  }
+  bundleItems.push({ variantId, price: parseFloat(price), name, image, variantTitle, uid: Date.now() + Math.random() });
+  renderBundle();
+}
+
+// --- REMOVE ITEM ---
+function removeFromBundle(uid) {
+  bundleItems = bundleItems.filter(item => item.uid !== uid);
+  renderBundle();
+}
+
+// --- GET CURRENT DISCOUNT ---
+function getCurrentTier() {
+  const count = bundleItems.length;
+  let tier = null;
+  BUNDLE_CONFIG.tiers.forEach(t => { if (count >= t.min) tier = t; });
+  return tier;
+}
+
+// --- RENDER ---
+function renderBundle() {
+  const count = bundleItems.length;
+  const tier = getCurrentTier();
+  const discountPct = tier ? tier.discount : 0;
+
+  // Count badge
+  document.getElementById('bundle-count').textContent = count;
+
+  // Slots
+  for (let i = 1; i <= BUNDLE_CONFIG.maxItems; i++) {
+    const slot = document.getElementById('slot-' + i);
+    if (!slot) continue;
+    const item = bundleItems[i - 1];
+    const discountSlot = i === 3 ? 10 : i === 4 ? 15 : i === 5 ? 20 : null;
+    if (item) {
+      slot.classList.add('filled');
+      slot.classList.remove('unlocked');
+      slot.innerHTML = `<img src="${item.image}" alt="${item.name}">`;
+    } else {
+      slot.classList.remove('filled');
+      slot.innerHTML = discountSlot ? `<span class="discount-label">-${discountSlot}%</span>` : '';
+      if (discountSlot && count >= (discountSlot === 10 ? 3 : discountSlot === 15 ? 4 : 5)) {
+        slot.classList.add('unlocked');
+      } else {
+        slot.classList.remove('unlocked');
+      }
+    }
+  }
+
+  // Items list
+  const list = document.getElementById('bundle-items-list');
+  if (bundleItems.length === 0) {
+    list.innerHTML = '';
+  } else {
+    list.innerHTML = bundleItems.map(item => `
+      <div class="bundle-item-row">
+        <img class="bundle-item-img" src="${item.image}" alt="${item.name}">
+        <div class="bundle-item-name">
+          ${item.name}
+          <div class="bundle-item-variant">${item.variantTitle}</div>
+        </div>
+        <span class="bundle-item-price">$${item.price.toFixed(2)}</span>
+        <button class="bundle-item-remove" onclick="removeFromBundle(${item.uid})" title="Remove">&#x2715;</button>
+      </div>
+    `).join('');
+  }
+
+  // Totals
+  const originalTotal = bundleItems.reduce((sum, i) => sum + i.price, 0);
+  const discountedTotal = originalTotal * (1 - discountPct / 100);
+
+  const totalOrigEl = document.getElementById('total-original');
+  const totalFinalEl = document.getElementById('total-final');
+  const discountBadgeEl = document.getElementById('discount-badge');
+
+  if (discountPct > 0) {
+    totalOrigEl.textContent = '$' + originalTotal.toFixed(2);
+    totalOrigEl.style.display = 'inline';
+    totalFinalEl.textContent = '$' + discountedTotal.toFixed(2);
+    discountBadgeEl.textContent = `🎉 ${discountPct}% discount applied!`;
+    discountBadgeEl.style.display = 'inline-block';
+  } else {
+    totalOrigEl.style.display = 'none';
+    totalFinalEl.textContent = '$' + originalTotal.toFixed(2);
+    discountBadgeEl.style.display = 'none';
+  }
+
+  // CTA Button
+  const ctaBtn = document.getElementById('cta-btn');
+  const ctaText = document.getElementById('cta-text');
+  const remaining = 3 - count;
+
+  if (count === 0) {
+    ctaText.textContent = 'Add More 3 Items';
+    ctaBtn.classList.remove('ready');
+    ctaBtn.disabled = false;
+  } else if (count < 3) {
+    ctaText.textContent = `Add ${remaining} More Item${remaining > 1 ? 's' : ''} for 10% OFF`;
+    ctaBtn.classList.remove('ready');
+    ctaBtn.disabled = false;
+  } else {
+    ctaText.textContent = `Add Bundle to Cart`;
+    ctaBtn.classList.add('ready');
+    ctaBtn.disabled = false;
+  }
+}
+
+// --- ADD BUNDLE TO CART ---
+async function addBundleToCart() {
+  if (bundleItems.length < 3) {
+    alert(`Please add at least ${3 - bundleItems.length} more item(s) to your bundle.`);
+    return;
+  }
+
+  const ctaBtn = document.getElementById('cta-btn');
+  ctaBtn.disabled = true;
+  ctaBtn.querySelector('span').textContent = 'Adding...';
+
+  const tier = getCurrentTier();
+  const discountPct = tier ? tier.discount : 0;
+
+  try {
+    // Build items array for cart
+    const items = bundleItems.map(item => ({
+      id: item.variantId,
+      quantity: 1,
+      properties: {
+        '_bundle': 'true',
+        '_bundle_discount': discountPct + '%',
+        '_bundle_size': bundleItems.length
+      }
+    }));
+
+    const response = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items })
+    });
+
+    if (!response.ok) throw new Error('Cart error');
+
+    // Apply discount via discount code if using automatic discount
+    // OR use Shopify Scripts / Discount Functions for % off
+    // See implementation notes in the guide
+
+    // Success
+    window.location.href = '/cart';
+
+  } catch (err) {
+    ctaBtn.disabled = false;
+    ctaBtn.querySelector('span').textContent = 'Add Bundle to Cart';
+    alert('Something went wrong. Please try again.');
+    console.error(err);
+  }
+}
+
+// Initial render
+renderBundle();
+</script>

@@ -1,0 +1,12 @@
+{%- comment -%}
+  BUY-BOX SNIPPET C — paste into a "Custom liquid" block placed LAST (after the
+  Buy buttons block). Adds the trust row and the in-stock dispatch line.
+{%- endcomment -%}
+<div class="oco-bb__trust">
+  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>Secure payments</span>
+  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>Fast shipping</span>
+  <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>Easy returns</span>
+</div>
+{%- if product.selected_or_first_available_variant.available -%}
+  <p class="oco-bb__stock">In stock &middot; Usually dispatched within 24 hours</p>
+{%- endif -%}

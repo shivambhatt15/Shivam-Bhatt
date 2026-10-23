@@ -1,0 +1,20 @@
+{%- comment -%}
+  BUY-BOX SNIPPET B — paste into a "Custom liquid" block placed AFTER the Price
+  block (and before the Variant picker block). Adds the tax/per-tube line, the
+  benefit chips, and the "Choose your pack" label.
+  Metafield: oco.concerns (list.single_line_text_field) for the chips.
+{%- endcomment -%}
+{%- liquid
+  assign cur = product.selected_or_first_available_variant
+  assign t = cur.title | split: ' ' | last | plus: 0
+  assign concerns = product.metafields.oco.concerns.value
+-%}
+<p class="oco-bb__pricemeta">MRP inclusive of all taxes{% if t > 0 %} &middot; {{ cart.currency.symbol }}{{ cur.price | divided_by: t | divided_by: 100 | round }}/tube &middot; {{ t }} tubes{% endif %}</p>
+{%- if concerns != blank -%}
+  <div class="oco-bb__chips">
+    {%- for c in concerns -%}
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>{{ c }}</span>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+<p class="oco-bb__packs-label">Choose your pack</p>

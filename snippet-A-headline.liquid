@@ -1,0 +1,79 @@
+{%- comment -%}
+  BUY-BOX SNIPPET A — paste into a "Custom liquid" block placed FIRST (above the
+  Title block; remove the native Title block since this replaces it).
+  Renders the eyebrow chip + marketing headline + subline, and decorates the
+  native pack pills with price / MRP / per-tube / BEST VALUE.
+  Metafields: oco.eyebrow, oco.headline, oco.headline_accent, oco.subheadline.
+{%- endcomment -%}
+{%- liquid
+  assign chip = product.metafields.oco.eyebrow.value | default: 'Clinically Tested Herbal Oral Care Gel'
+  assign hl   = product.metafields.oco.headline.value | default: product.title
+  assign acc  = product.metafields.oco.headline_accent.value
+  assign sub  = product.metafields.oco.subheadline.value
+
+  assign best_id = 0
+  assign best_per = 9999999999
+  for v in product.variants
+    assign t = v.title | split: ' ' | last | plus: 0
+    if t > 0
+      assign pp = v.price | divided_by: t
+      if pp < best_per
+        assign best_per = pp
+        assign best_id = v.id
+      endif
+    endif
+  endfor
+-%}
+<div class="oco-bb__head">
+  <span class="oco-bb__chip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 1.7 3h10.6A2 2 0 0 0 19 19l-5-10V3"/></svg>
+    {{ chip }}
+  </span>
+  <h1 class="oco-bb__headline">{{ hl }}{% if acc != blank %} <span class="oco-bb__accent">{{ acc }}</span>{% endif %}</h1>
+  {%- if sub != blank -%}<p class="oco-bb__sub">{{ sub }}</p>{%- endif -%}
+</div>
+
+<script type="application/json" id="oco-vardata-{{ product.id }}">
+[
+{%- for v in product.variants -%}
+  {%- assign t = v.title | split: ' ' | last | plus: 0 -%}
+  {%- assign per = '' -%}
+  {%- if t > 0 -%}{%- assign perval = v.price | divided_by: t | divided_by: 100 | round -%}{%- capture per -%}{{ cart.currency.symbol }}{{ perval }}/tube{%- endcapture -%}{%- endif -%}
+  {%- assign mrp = '' -%}{%- assign savepct = 0 -%}
+  {%- if v.compare_at_price > v.price -%}{%- assign mrp = v.compare_at_price | money -%}{%- assign savepct = v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price -%}{%- endif -%}
+  {%- assign isbest = false -%}{%- if v.id == best_id -%}{%- assign isbest = true -%}{%- endif -%}
+  {"title": {{ v.title | json }}, "now": {{ v.price | money | json }}, "mrp": {{ mrp | json }}, "per": {{ per | json }}, "best": {{ isbest }}, "savepct": {{ savepct }} }{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]
+</script>
+<script>
+  (function () {
+    var el = document.getElementById('oco-vardata-{{ product.id }}');
+    if (!el) return;
+    var data;
+    try { data = JSON.parse(el.textContent || '[]'); } catch (e) { return; }
+    function norm(s) { return (s || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
+    function decorate() {
+      var opts = document.querySelectorAll('.product-static-buy-tools .single-option-selector__option');
+      opts.forEach(function (opt) {
+        if (opt.dataset.ocoDone) return;
+        var txtEl = opt.querySelector('.single-option-selector__option__text') || opt;
+        var label = norm(txtEl.textContent);
+        var d = null;
+        for (var i = 0; i < data.length; i++) { if (norm(data[i].title) === label) { d = data[i]; break; } }
+        if (!d) return;
+        opt.dataset.ocoDone = '1';
+        var html = '';
+        if (d.best) html += '<span class="oco-pp__badge">BEST VALUE' + (d.savepct ? ' · SAVE ' + d.savepct + '%' : '') + '</span>';
+        html += '<span class="oco-pp"><span class="oco-pp__now">' + d.now + '</span>';
+        if (d.mrp) html += '<span class="oco-pp__mrp">' + d.mrp + '</span>';
+        html += '</span>';
+        if (d.per) html += '<span class="oco-pp__per">' + d.per + '</span>';
+        txtEl.insertAdjacentHTML('afterend', html);
+      });
+    }
+    decorate();
+    setTimeout(decorate, 600);
+    setTimeout(decorate, 1500);
+  })();
+</script>

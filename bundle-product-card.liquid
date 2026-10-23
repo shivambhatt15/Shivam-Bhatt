@@ -1,0 +1,133 @@
+{% comment %}
+  BUNDLE PRODUCT CARD SNIPPET
+  File: snippets/bundle-product-card.liquid
+  
+  Used by the bundle builder page template.
+  Renders a single product card with variant selector and Add button.
+{% endcomment %}
+
+{%- assign is_on_sale = false -%}
+{%- if product.compare_at_price > product.price -%}
+  {%- assign is_on_sale = true -%}
+{%- endif -%}
+
+{%- comment -%} Check product tags for badges {%- endcomment -%}
+{%- assign is_new = false -%}
+{%- assign is_best = false -%}
+{%- if product.tags contains 'new' -%}{%- assign is_new = true -%}{%- endif -%}
+{%- if product.tags contains 'best-choice' -%}{%- assign is_best = true -%}{%- endif -%}
+
+{%- comment -%} Compute sale percent {%- endcomment -%}
+{%- assign sale_percent = 0 -%}
+{%- if is_on_sale -%}
+  {%- assign diff = product.compare_at_price | minus: product.price -%}
+  {%- assign sale_percent = diff | times: 100 | divided_by: product.compare_at_price | round -%}
+{%- endif -%}
+
+<div class="bundle-card" data-product-id="{{ product.id }}">
+
+  {%- comment -%} Badge {%- endcomment -%}
+  {%- if is_best -%}
+    <span class="badge badge-best">Best Choice!</span>
+  {%- elsif is_new -%}
+    <span class="badge badge-new">New</span>
+  {%- elsif is_on_sale -%}
+    <span class="badge badge-sale">-{{ sale_percent }}%</span>
+  {%- endif -%}
+
+  {%- comment -%} Product Image {%- endcomment -%}
+  <img
+    class="card-image"
+    src="{{ product.featured_image | img_url: '300x300', crop: 'center' }}"
+    alt="{{ product.title | escape }}"
+    loading="lazy"
+  >
+
+  {%- comment -%} Product Name {%- endcomment -%}
+  <p class="card-name">{{ product.title }}</p>
+
+  {%- comment -%} Price {%- endcomment -%}
+  <div class="card-prices">
+    {%- if is_on_sale -%}
+      <span class="card-price sale">{{ product.price | money }}</span>
+      <span class="card-price-original">{{ product.compare_at_price | money }}</span>
+    {%- else -%}
+      <span class="card-price">{{ product.price | money }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Variant Selector + Add Button {%- endcomment -%}
+  <div class="card-actions">
+
+    {%- if product.variants.size > 1 -%}
+      <select
+        class="card-select"
+        id="variant-select-{{ product.id }}"
+        onchange="updateCardVariant({{ product.id }}, this)"
+      >
+        {%- for variant in product.variants -%}
+          {%- if variant.available -%}
+            <option
+              value="{{ variant.id }}"
+              data-price="{{ variant.price | divided_by: 100.0 }}"
+              data-title="{{ variant.title | escape }}"
+              data-image="{{ variant.image.src | default: product.featured_image.src | img_url: '100x100' }}"
+            >
+              {{ variant.title }}
+            </option>
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+    {%- else -%}
+      {%- assign v = product.variants.first -%}
+      <select class="card-select" id="variant-select-{{ product.id }}">
+        <option
+          value="{{ v.id }}"
+          data-price="{{ v.price | divided_by: 100.0 }}"
+          data-title="{{ v.title | escape }}"
+          data-image="{{ product.featured_image.src | img_url: '100x100' }}"
+        >
+          {{ v.title }}
+        </option>
+      </select>
+    {%- endif -%}
+
+    <button
+      class="card-add-btn"
+      id="add-btn-{{ product.id }}"
+      onclick="handleAddToBundle({{ product.id }}, '{{ product.title | escape }}', '{{ product.featured_image.src | img_url: '100x100' }}')"
+    >
+      Add
+    </button>
+
+  </div>
+</div>
+
+<script>
+// Update card when variant changes
+function updateCardVariant(productId, selectEl) {
+  // No action needed here — values read at add time
+}
+
+// Handle Add button click
+function handleAddToBundle(productId, productName, productImage) {
+  const select = document.getElementById('variant-select-' + productId);
+  const selectedOption = select.options[select.selectedIndex];
+
+  const variantId = parseInt(selectedOption.value);
+  const price = parseFloat(selectedOption.dataset.price);
+  const variantTitle = selectedOption.dataset.title;
+  const variantImage = selectedOption.dataset.image || productImage;
+
+  addToBundle(variantId, price, productName, variantImage, variantTitle);
+
+  // Visual feedback
+  const btn = document.getElementById('add-btn-' + productId);
+  btn.textContent = '✓ Added';
+  btn.classList.add('added');
+  setTimeout(() => {
+    btn.textContent = 'Add';
+    btn.classList.remove('added');
+  }, 1500);
+}
+</script>

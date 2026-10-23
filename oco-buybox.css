@@ -1,0 +1,95 @@
+/* =====================================================================
+   OCO buy-box overlay — matches the Lovable product layout.
+   Scoped to .product-static-buy-tools (your product page section class)
+   so nothing here leaks to other templates. Pairs with the three
+   custom_liquid snippets in oco-buybox-blocks.liquid.
+   ===================================================================== */
+.product-static-buy-tools {
+  --oco-p:#288674; --oco-pd:#005b4d; --oco-ps:#e1f8f2; --oco-fg:#061415;
+  --oco-mut:#5a6569; --oco-bd:#dde7e7; --oco-accent:#fde4bb; --oco-accent-fg:#3b220d;
+}
+
+/* The marketing headline is rendered by Snippet A, so hide the native <h1>.
+   (Better: remove the "Title" block in the editor. This is a safety net.) */
+.product-static-buy-tools .product__title { display:none !important; }
+
+/* ---- Eyebrow chip ---- */
+.product-static-buy-tools .oco-bb__chip {
+  display:inline-flex; align-items:center; gap:.4rem; padding:.35rem .75rem;
+  border-radius:999px; background:var(--oco-ps); color:var(--oco-pd);
+  font-size:.78rem; font-weight:600; margin-bottom:.65rem;
+}
+.product-static-buy-tools .oco-bb__chip svg { width:1rem; height:1rem; }
+
+/* ---- Headline + accent + subline ---- */
+.product-static-buy-tools .oco-bb__headline {
+  text-transform:none !important; font-weight:800; letter-spacing:-.02em; line-height:1.1;
+  font-size:clamp(1.8rem,3.4vw,2.6rem); color:var(--oco-fg); margin:0 0 .4rem;
+}
+.product-static-buy-tools .oco-bb__accent { color:var(--oco-p); }
+.product-static-buy-tools .oco-bb__sub { font-size:1rem; font-weight:500; color:var(--oco-mut); margin:0 0 .85rem; }
+
+/* ---- Price block: amber SAVE tag + per-tube meta ---- */
+.product-static-buy-tools .price-item--sale__save-tag {
+  background:var(--oco-accent) !important; color:var(--oco-accent-fg) !important;
+  font-weight:700; border-radius:6px;
+}
+.product-static-buy-tools .oco-bb__pricemeta { font-size:.8rem; color:var(--oco-mut); margin:.1rem 0 1rem; }
+
+/* ---- Benefit / concern chips ---- */
+.product-static-buy-tools .oco-bb__chips { display:flex; flex-wrap:wrap; gap:.5rem; margin:0 0 1.25rem; }
+.product-static-buy-tools .oco-bb__chips span {
+  display:inline-flex; align-items:center; gap:.35rem; padding:.4rem .75rem;
+  border:1px solid var(--oco-bd); border-radius:999px; font-size:.8rem; color:var(--oco-fg);
+}
+.product-static-buy-tools .oco-bb__chips svg { width:.9rem; height:.9rem; color:var(--oco-p); flex:none; }
+
+/* ---- "Choose your pack" label ---- */
+.product-static-buy-tools .oco-bb__packs-label {
+  font-weight:600; font-size:.95rem; margin:0 0 .65rem; text-align:left;
+  text-transform:none; color:var(--oco-fg);
+}
+
+/* ---- Native pack pills -> Lovable cards ---- */
+.product-static-buy-tools .single-option-selector--box {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:.75rem; margin-left:0;
+}
+@media (max-width:480px) { .product-static-buy-tools .single-option-selector--box { grid-template-columns:1fr; } }
+.product-static-buy-tools .single-option-selector__option {
+  width:100% !important; height:auto !important; min-width:0 !important; line-height:1.3 !important;
+  text-align:left !important; background:#fff !important; color:var(--oco-fg) !important;
+  border:2px solid var(--oco-bd); border-radius:1rem; padding:1rem !important; margin:0 !important;
+  position:relative; box-sizing:border-box; overflow:visible !important;
+}
+.product-static-buy-tools .single-option-selector__option__text { padding:0 !important; display:block; font-weight:700; font-size:1rem; }
+/* selected card (works with theme's checked classes) */
+.product-static-buy-tools input[type=radio]:checked + .single-option-selector__option-wrap .single-option-selector__option,
+.product-static-buy-tools .single-option-selector__option-wrap--checked .single-option-selector__option {
+  background:var(--oco-ps) !important; color:var(--oco-fg) !important; border-color:var(--oco-p) !important;
+}
+/* injected price lines */
+.product-static-buy-tools .oco-pp { display:block; margin-top:.45rem; }
+.product-static-buy-tools .oco-pp__now { font-size:1.35rem; font-weight:800; }
+.product-static-buy-tools .oco-pp__mrp { font-size:.8rem; text-decoration:line-through; color:var(--oco-mut); margin-left:.35rem; }
+.product-static-buy-tools .oco-pp__per { display:block; font-size:.72rem; color:var(--oco-mut); font-weight:600; margin-top:.15rem; }
+.product-static-buy-tools .oco-pp__badge {
+  position:absolute; top:-11px; left:12px; background:var(--oco-p); color:#fff;
+  font-size:9px; font-weight:700; letter-spacing:.03em; padding:3px 9px; border-radius:999px; white-space:nowrap;
+}
+
+/* ---- Buttons: teal ATC pill + side-by-side on desktop ---- */
+.product-static-buy-tools .product-form__cart-submit {
+  background:var(--oco-p) !important; color:#fff !important; border-radius:999px !important;
+}
+.product-static-buy-tools .shopify-payment-button__button { border-radius:999px !important; }
+@media (min-width:750px) {
+  .product-static-buy-tools .product-form__controls-group--submit { flex-direction:row !important; gap:.75rem; align-items:stretch; }
+  .product-static-buy-tools .product-form__item--submit { flex:1 1 0; }
+  .product-static-buy-tools .shopify-payment-button { flex:1 1 0; margin-top:0; }
+}
+
+/* ---- Trust row + stock line ---- */
+.product-static-buy-tools .oco-bb__trust { display:flex; flex-wrap:wrap; gap:.5rem 1.25rem; margin-top:1rem; font-size:.78rem; color:var(--oco-mut); }
+.product-static-buy-tools .oco-bb__trust span { display:inline-flex; align-items:center; gap:.4rem; }
+.product-static-buy-tools .oco-bb__trust svg { width:1rem; height:1rem; color:var(--oco-p); flex:none; }
+.product-static-buy-tools .oco-bb__stock { margin-top:.75rem; font-size:.8rem; color:var(--oco-p); font-weight:600; }
